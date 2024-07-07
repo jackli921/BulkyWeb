@@ -7,10 +7,8 @@ namespace BulkyWeb.Controllers;
 public class CategoryController : Controller
 {
     private readonly ApplicationDbContext _db;
-    public CategoryController(ApplicationDbContext db)
-    {
-        _db = db;
-    }
+    public CategoryController(ApplicationDbContext db) => _db = db;
+
     // GET
     public IActionResult Index()
     {
@@ -18,10 +16,8 @@ public class CategoryController : Controller
         return View(objCategoryList);
     }
 
-    public IActionResult Create()
-    {
-        return View();
-    }
+    public IActionResult Create() => View();
+
     [HttpPost]
     public IActionResult Create(Category obj)
     {
@@ -34,6 +30,7 @@ public class CategoryController : Controller
         {
             _db.Categories.Add(obj);
             _db.SaveChanges();
+            TempData["Success"] = "Category created successfully.";
             return this.RedirectToAction("Index");
         }
         return View();
@@ -54,13 +51,28 @@ public class CategoryController : Controller
         {
             _db.Categories.Update(obj);
             _db.SaveChanges();
+            TempData["Success"] = "Category updated successfully.";
             return this.RedirectToAction("Index");
         }
         return View();
     }
 
-    public IActionResult Delete(Category obj)
+    public IActionResult Delete(int? id) // GET
     {
+        if (id is null || id == 0) return this.NotFound();
+        Category? categoryFromDb1 = _db.Categories.Find(id); // .Find() only works on Primary Keys
+        if (categoryFromDb1 is null) return this.NotFound();
+        return View(categoryFromDb1);
+    }
+
+    [HttpPost, ActionName("Delete")] // POST
+    public IActionResult DeletePOST(int? id)
+    {
+        Category obj = _db.Categories.Find(id);
+        if (obj is null) return this.NotFound();
+        _db.Categories.Remove(obj);
+        TempData["Success"] = "Category deleted successfully.";
+        _db.SaveChanges();
         return this.RedirectToAction("Index");
     }
 }

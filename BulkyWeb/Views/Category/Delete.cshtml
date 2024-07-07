@@ -4,25 +4,23 @@
     <div class="border p-3 mt-4">
         <div asp-validation-summary="ModelOnly"></div>
         <div class="row pb-2">
-            <h1>Edit Category</h1>
+            <h1>Delete Category</h1>
             <hr/>
         </div>
 
         <div class="mb-3 row">
             <label asp-for="Name"></label>
-            <input asp-for="Name" class="form-control"/>
-            <span asp-validation-for="Name" class="text-danger"></span>
+            <input asp-for="Name" disabled class="form-control"/>
         </div>
 
         <div class="mb-3 row">
             <label asp-for="DisplayOrder"></label>
-            <input asp-for="DisplayOrder" class="form-control"/>
-            <span asp-validation-for="DisplayOrder" class="text-danger"></span>
+            <input asp-for="DisplayOrder" disabled class="form-control"/>
         </div>
 
         <div class="row">
             <div class="col-6 col-md-3">
-                <button type="submit" class="btn btn-primary form-control">Update</button>
+                <button type="submit" class="btn btn-danger form-control">Delete</button>
             </div>
             <div class="col-6 col-md-3">
                 <a asp-controller="Category" asp-action="Index" class="btn btn-secondary border form-control">Back To List</a>
