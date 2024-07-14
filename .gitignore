@@ -1,0 +1,12 @@
+# Ignore .idea directory
+.idea/
+
+# Ignore solution user-specific settings
+*.DotSettings.user
+
+# Ignore build outputs and intermediate files
+**/bin/
+**/obj/
+
+# Ignore scaffolding readme
+BulkyWeb/ScaffoldingReadMe.txt
