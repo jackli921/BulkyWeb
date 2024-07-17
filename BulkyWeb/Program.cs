@@ -1,5 +1,5 @@
+using Bulk.DataAccess.Data;
 using Bulk.DataAccess.Repository;
-using BulkyWeb.Controllers.Data;
 using Microsoft.EntityFrameworkCore;
 using System.ComponentModel;
 

@@ -1,4 +1,4 @@
-﻿using BulkyWeb.Controllers.Data;
+﻿using Bulk.DataAccess.Data;
 
 namespace Bulk.DataAccess.Repository;
 

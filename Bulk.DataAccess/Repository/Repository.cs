@@ -1,4 +1,4 @@
-﻿using BulkyWeb.Controllers.Data;
+﻿using Bulk.DataAccess.Data;
 using Microsoft.EntityFrameworkCore;
 using System.Linq.Expressions;
 

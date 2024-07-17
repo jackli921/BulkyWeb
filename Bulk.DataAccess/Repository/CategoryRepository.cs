@@ -1,5 +1,5 @@
-﻿using Bulky.Models;
-using BulkyWeb.Controllers.Data;
+﻿using Bulk.DataAccess.Data;
+using Bulky.Models;
 using BulkyWeb.Models;
 using System.Linq.Expressions;
 
