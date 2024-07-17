@@ -1,6 +1,7 @@
 ﻿using Bulk.DataAccess.Repository;
 using Bulky.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace BulkyWeb.Areas.Admin.Controllers;
 
@@ -18,8 +19,16 @@ public class ProductController: Controller
        }
        
        // CREATE
-       public IActionResult Create() => this.View();
-       
+       public IActionResult Create()
+       {
+              IEnumerable<SelectListItem> categoryList = _unitOfWork.Category.GetAll().Select(u => new SelectListItem
+              {
+                     Text = u.Name,
+                     Value = u.Id.ToString()
+              });
+              ViewBag.CategoryList = categoryList;
+              return this.View();
+       }
        [HttpPost]
        public IActionResult Create(Product obj)
        {
