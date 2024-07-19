@@ -1,5 +1,6 @@
 ﻿using Bulk.DataAccess.Repository;
 using Bulky.Models;
+using Bulky.Models.ViewModel;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 
@@ -19,49 +20,47 @@ public class ProductController: Controller
        }
        
        // CREATE
-       public IActionResult Create()
+       public IActionResult Upsert(int? id)
        {
-              IEnumerable<SelectListItem> categoryList = _unitOfWork.Category.GetAll().Select(u => new SelectListItem
+              ProductVM ProductVM = new()
               {
-                     Text = u.Name,
-                     Value = u.Id.ToString()
-              });
-              ViewBag.CategoryList = categoryList;
-              return this.View();
+                     CategoryList = _unitOfWork.Category.GetAll().Select(u => new SelectListItem
+                     {
+                            Text = u.Name,
+                            Value = u.Id.ToString()
+                     }),
+                     Product = new Product()
+              };
+              if (id == null || id == 0) // Create
+              {
+                     return this.View(ProductVM);
+              }
+              else // Update
+              {
+                     ProductVM.Product = _unitOfWork.Product.Get(u => u.Id == id);
+                     return this.View(ProductVM);
+              }
        }
+       
        [HttpPost]
-       public IActionResult Create(Product obj)
+       public IActionResult Upsert(ProductVM productVM, IFormFile file)
        {
               if (this.ModelState.IsValid)
               {
-                     _unitOfWork.Product.Add(obj);
+                     _unitOfWork.Product.Add(productVM.Product);
                      _unitOfWork.Save();
                      this.TempData["Success"] = "Product created successfully";
                      return this.RedirectToAction("Index");
               }
-              return this.View();
-       }
-       
-       // EDIT
-       public IActionResult Edit(int? id)
-       {
-              if (id is null || id == 0) return this.NotFound();
-              Product? productFromDb = _unitOfWork.Product.Get(u => u.Id == id);
-              if (productFromDb is null) return this.NotFound();
-              return this.View(productFromDb);
-       }
-
-       [HttpPost]
-       public IActionResult Edit(Product obj)
-       {
-              if (this.ModelState.IsValid)
+              else
               {
-                     _unitOfWork.Product.Update(obj);
-                     _unitOfWork.Save();
-                     this.TempData["Success"] = "Product updated successfully.";
-                     return this.RedirectToAction("Index");
-              }
-              return this.View();
+                     productVM.CategoryList = _unitOfWork.Category.GetAll().Select(u => new SelectListItem
+                     {
+                            Text = u.Name,
+                            Value = u.Id.ToString()
+                     });
+                     return this.View(productVM);
+              };
        }
        
        // DELETE
