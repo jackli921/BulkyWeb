@@ -10,7 +10,13 @@ namespace BulkyWeb.Areas.Admin.Controllers;
 public class ProductController: Controller
 {
        private readonly IUnitOfWork _unitOfWork;
-       public ProductController(IUnitOfWork unitOfWork) => _unitOfWork = unitOfWork;
+       private readonly IWebHostEnvironment _webHostEnvironment;
+
+       public ProductController(IUnitOfWork unitOfWork, IWebHostEnvironment webHostEnvironment)
+       {
+              _unitOfWork = unitOfWork;
+              _webHostEnvironment = webHostEnvironment;
+       }
        
        // GET
        public IActionResult Index()
@@ -47,7 +53,38 @@ public class ProductController: Controller
        {
               if (this.ModelState.IsValid)
               {
-                     _unitOfWork.Product.Add(productVM.Product);
+                     string wwwRootPath = _webHostEnvironment.WebRootPath;
+                     if (file != null)
+                     {
+                            string fileName = Guid.NewGuid().ToString() + Path.GetExtension(file.FileName);
+                            string productPath = Path.Combine(wwwRootPath, @"images\product");
+
+                            if (!string.IsNullOrEmpty(productVM.Product.ImageUrl))
+                            {
+                                   // delete old file
+                                   string oldFilePath = Path.Combine(wwwRootPath,productVM.Product.ImageUrl.TrimStart('\\'));
+                                   if (System.IO.File.Exists(oldFilePath))
+                                   {
+                                          System.IO.File.Delete(oldFilePath);
+                                   }
+                            }
+                            
+                            using (var fileStream = new FileStream(Path.Combine(productPath, fileName), FileMode.Create))
+                            {
+                                   file.CopyTo(fileStream);      
+                            }
+                            productVM.Product.ImageUrl = @"\images\product\" + fileName;
+                     }
+
+                     if (productVM.Product.Id == 0)
+                     {
+                            _unitOfWork.Product.Add(productVM.Product);
+                     }
+                     else
+                     {
+                            _unitOfWork.Product.Update(productVM.Product);
+                     }
+                     
                      _unitOfWork.Save();
                      this.TempData["Success"] = "Product created successfully";
                      return this.RedirectToAction("Index");
