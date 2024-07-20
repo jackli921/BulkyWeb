@@ -21,7 +21,7 @@ public class ProductController: Controller
        // GET
        public IActionResult Index()
        {
-              List<Product> objProductList = _unitOfWork.Product.GetAll().ToList();
+              List<Product> objProductList = _unitOfWork.Product.GetAll(includeProperties:"Cateogry").ToList();
               return this.View(objProductList);
        }
        
