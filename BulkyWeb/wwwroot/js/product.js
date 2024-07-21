@@ -3,7 +3,6 @@ $(document).ready(function() {
     datatable = $('#tblData').DataTable({
         ajax: {
             url: '/admin/product/getall',
-            dataSrc: 'data'
         },
         columns: [
             { data: 'title' },
