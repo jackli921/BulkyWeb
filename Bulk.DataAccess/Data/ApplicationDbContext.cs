@@ -13,6 +13,7 @@ public class ApplicationDbContext: IdentityDbContext<IdentityUser>
     }
     public DbSet<Category> Categories { get; set; }
     public DbSet<Product> Products { get; set; }
+    public DbSet<Company> Companies { get; set; }
     public DbSet<ApplicationUser> ApplicationUsers { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -23,6 +24,17 @@ public class ApplicationDbContext: IdentityDbContext<IdentityUser>
             new Category { Id = 2, Name = "SciFi", DisplayOrder = 2 },
             new Category { Id = 3, Name = "History", DisplayOrder = 3 },
             new Category { Id = 4, Name = "Anime", DisplayOrder = 4 }
+        );
+        
+        modelBuilder.Entity<Company>().HasData(
+            new Company { Id = 1, Name = "Tech Solution", StreetAddress = "150 Waterloo Ave", City = "Tech City", PostalCode = "12121", State = "IL", PhoneNumber = "123-456-789"},
+            new Company { Id = 2, Name = "Vivid Books",  StreetAddress = "23 Kitchener Rd", City = "Calgary", PostalCode = "324132", State = "AB", PhoneNumber = "431-456-789"},
+            new Company { Id = 3, Name = "Bulk Barn",  StreetAddress = "310 Spadina Ave", City = "Toronto", PostalCode = "M5M3G5", State = "ON", PhoneNumber = "412-454-219"},
+            new Company { Id = 4, Name = "Innovative Tech", StreetAddress = "245 Silicon Blvd." ,City = "Innovation Town", PostalCode = "13131", State = "CA", PhoneNumber = "234-567-890"},
+            new Company { Id = 5, Name = "Green Energy Inc.", StreetAddress = "98 Renewable Rd." ,City = "Eco City", PostalCode = "14141", State = "TX", PhoneNumber = "345-678-901"},
+            new Company { Id = 6, Name = "Future Enterprises", StreetAddress = "77 Futurist Dr." ,City = "Futureville", PostalCode = "15151", State = "NY", PhoneNumber = "456-789-012"},
+            new Company { Id = 7, Name = "AI Innovations", StreetAddress = "500 AI Ln." ,City = "Machine Town", PostalCode = "16161", State = "WA", PhoneNumber = "567-890-123"},
+            new Company { Id = 8, Name = "HealthTech", StreetAddress = "300 Wellness Way" ,City = "Health City", PostalCode = "17171", State = "FL", PhoneNumber = "678-901-234"}
         );
 
         modelBuilder.Entity<Product>().HasData(new Product

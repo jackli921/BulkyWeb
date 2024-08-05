@@ -69,6 +69,120 @@ namespace BulkyWeb.Migrations
                         });
                 });
 
+            modelBuilder.Entity("Bulky.Models.Company", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("City")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("PhoneNumber")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("PostalCode")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("State")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("StreetAddress")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Companies");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            City = "Tech City",
+                            Name = "Tech Solution",
+                            PhoneNumber = "123-456-789",
+                            PostalCode = "12121",
+                            State = "IL",
+                            StreetAddress = "150 Waterloo Ave"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            City = "Calgary",
+                            Name = "Vivid Books",
+                            PhoneNumber = "431-456-789",
+                            PostalCode = "324132",
+                            State = "AB",
+                            StreetAddress = "23 Kitchener Rd"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            City = "Toronto",
+                            Name = "Bulk Barn",
+                            PhoneNumber = "412-454-219",
+                            PostalCode = "M5M3G5",
+                            State = "ON",
+                            StreetAddress = "310 Spadina Ave"
+                        },
+                        new
+                        {
+                            Id = 4,
+                            City = "Innovation Town",
+                            Name = "Innovative Tech",
+                            PhoneNumber = "234-567-890",
+                            PostalCode = "13131",
+                            State = "CA",
+                            StreetAddress = "245 Silicon Blvd."
+                        },
+                        new
+                        {
+                            Id = 5,
+                            City = "Eco City",
+                            Name = "Green Energy Inc.",
+                            PhoneNumber = "345-678-901",
+                            PostalCode = "14141",
+                            State = "TX",
+                            StreetAddress = "98 Renewable Rd."
+                        },
+                        new
+                        {
+                            Id = 6,
+                            City = "Futureville",
+                            Name = "Future Enterprises",
+                            PhoneNumber = "456-789-012",
+                            PostalCode = "15151",
+                            State = "NY",
+                            StreetAddress = "77 Futurist Dr."
+                        },
+                        new
+                        {
+                            Id = 7,
+                            City = "Machine Town",
+                            Name = "AI Innovations",
+                            PhoneNumber = "567-890-123",
+                            PostalCode = "16161",
+                            State = "WA",
+                            StreetAddress = "500 AI Ln."
+                        },
+                        new
+                        {
+                            Id = 8,
+                            City = "Health City",
+                            Name = "HealthTech",
+                            PhoneNumber = "678-901-234",
+                            PostalCode = "17171",
+                            State = "FL",
+                            StreetAddress = "300 Wellness Way"
+                        });
+                });
+
             modelBuilder.Entity("Bulky.Models.Product", b =>
                 {
                     b.Property<int>("Id")
