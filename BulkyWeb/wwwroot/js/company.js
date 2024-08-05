@@ -2,26 +2,20 @@
 $(document).ready(function() {
     datatable = $('#tblData').DataTable({
         ajax: {
-            url: '/admin/product/getall',
+            url: '/admin/company/getall',
         },
         columns: [
-            { data: 'title' },
-            {
-                data: 'price',
-                render: function(data, type, row) {
-                    return '$' + data.toFixed(2);
-                }
-            },
-            { data: 'description' },
-            { data: 'isbn' },
-            { data: 'author' },
-            { data: 'category.name' },
+            { data: 'name' },
+            { data: 'streetAddress' },
+            { data: 'city' },
+            { data: 'state' },
+            { data: 'phoneNumber' },
             {
                 data: 'id',
                 render: function(data) {
                     return `<div class="w-75 btn-group" role="group">
-                        <a href="/admin/product/upsert?id=${data}" class="btn btn-primary mx-2"><i class="bi bi-pencil-square"></i> Edit</a>
-                        <a onClick=Delete('/admin/product/delete/${data}') class="btn btn-danger mx-2"><i class="bi bi-trash-fill"></i> Delete</a>
+                        <a href="/admin/company/upsert?id=${data}" class="btn btn-primary mx-2"><i class="bi bi-pencil-square"></i> Edit</a>
+                        <a onClick=Delete('/admin/company/delete/${data}') class="btn btn-danger mx-2"><i class="bi bi-trash-fill"></i> Delete</a>
                     </div>`
                 }
             }

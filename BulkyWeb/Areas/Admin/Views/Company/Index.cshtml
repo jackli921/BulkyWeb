@@ -1,13 +1,12 @@
-﻿@model System.Collections.Generic.List<Bulky.Models.Product>
-
+﻿
 <div class="container">
     <div class="row pt-4 pb-3">
         <div class="col-6">
-            <h2>Product List</h2>
+            <h2>Company List</h2>
         </div>
         <div class="col-6 text-end">
-            <a asp-controller="Product" asp-action="Upsert" class="btn btn-primary">
-                <i class="bi bi-plus-circle-dotted"></i> Create New Product
+            <a asp-controller="Company" asp-action="Upsert" class="btn btn-primary">
+                <i class="bi bi-plus-circle-dotted"></i> Create New Company
             </a>
         </div>
     </div>
@@ -15,18 +14,16 @@
     <table id="tblData" class="table table-bordered table-striped" style="width:100%">
         <thead>
         <tr>
-            <th>Title</th>
-            <th>Price</th>
-            <th>Description</th>
-            <th>ISBN</th>
-            <th>Author</th>
-            <th>Category</th>
-            <th>Actions</th>
+            <th>Name</th>
+            <th>Address</th>
+            <th>City</th>
+            <th>State</th>
+            <th>Phone Number</th>
         </tr>
         </thead>
     </table>
 </div>
 
 @section Scripts{
-    <script src="~/js/product.js"></script>
+    <script src="~/js/company.js"></script>
 }
