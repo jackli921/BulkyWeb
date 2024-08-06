@@ -60,7 +60,8 @@ public class HomeController : Controller
              shoppingCart.Id = 0; // This ensures EF Core handles the identity column
             _unitOfWork.ShoppingCart.Add(shoppingCart);
         }
-        
+
+        TempData["success"] = "Cart updated successfully";
         _unitOfWork.Save();
 
         return RedirectToAction(nameof(Index));
