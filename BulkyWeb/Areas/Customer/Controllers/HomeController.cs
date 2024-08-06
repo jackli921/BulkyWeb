@@ -42,11 +42,25 @@ public class HomeController : Controller
     [Authorize]
     public IActionResult Details(ShoppingCart shoppingCart)
     {
-        var claimsIdentity = (ClaimsIdentity)User.Identities;
+        var claimsIdentity = (ClaimsIdentity)User.Identity;
         var userId = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier).Value;
         shoppingCart.ApplicationUserId = userId;
+
+        ShoppingCart cartFromDb =
+            _unitOfWork.ShoppingCart.Get(x => x.ApplicationUserId == userId && x.ProductId == shoppingCart.ProductId);
+
+        if (cartFromDb is not null)
+        {
+            // shopping cart already exists
+            cartFromDb.Count += shoppingCart.Count;
+            _unitOfWork.ShoppingCart.Update(cartFromDb);
+        }
+        else
+        {
+             shoppingCart.Id = 0; // This ensures EF Core handles the identity column
+            _unitOfWork.ShoppingCart.Add(shoppingCart);
+        }
         
-        _unitOfWork.ShoppingCart.Add(shoppingCart);
         _unitOfWork.Save();
 
         return RedirectToAction(nameof(Index));

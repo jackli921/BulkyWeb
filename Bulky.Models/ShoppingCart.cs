@@ -6,6 +6,8 @@ namespace Bulky.Models;
 
 public class ShoppingCart
 {
+    [Key]
+    [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
     public int Id { get; set; }
     
     public int ProductId { get; set; }
