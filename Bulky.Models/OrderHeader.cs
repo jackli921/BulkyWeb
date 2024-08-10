@@ -23,19 +23,36 @@ public class OrderHeader
 
     public DateTime PaymentDate { get; set; }
     public DateOnly PaymentDueDate { get; set; }
-    
+    public string? SessionId { get; set; }
     public string? PaymentIntentId { get; set; }
     
-    [Required] 
+    [Required]
+    [Phone]
+    [StringLength(15, MinimumLength = 10)]
     public string PhoneNumber { get; set; }
+
     [Required]
+    [StringLength(100)]
     public string StreetAddress { get; set; }
+
     [Required]
+    [RegularExpression(@"^[a-zA-Z\s]+$", ErrorMessage = "The city name can only contain letters and spaces.")]
+    [StringLength(50)]
     public string City { get; set; }
-    [Required] 
+
+    [Required]
+    [RegularExpression(@"^[a-zA-Z\s]+$", ErrorMessage = "The state name can only contain letters and spaces.")]
+    [StringLength(2, MinimumLength = 2)]
     public string State { get; set; }
-    [Required] 
-    public string PostalCode { get; set; }    
-    [Required] 
+
+    [Required]
+    [RegularExpression(@"^\d{5}(-\d{4})?$", ErrorMessage = "Invalid postal code.")]
+    [StringLength(10)]
+    public string PostalCode { get; set; }
+    
+    [Required]
+    [RegularExpression(@"^[a-zA-Z\s]+$", ErrorMessage = "The name can only contain letters and spaces.")]
+    [StringLength(50)]
     public string Name { get; set; }
+
 }

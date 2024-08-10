@@ -5,6 +5,7 @@ using Bulky.Models.ViewModel;
 using Bulky.Utility;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Stripe.Checkout;
 
 namespace BulkyWeb.Areas.Customer.Controllers;
 
@@ -122,8 +123,43 @@ public class CartController : Controller
 
         if (applicationUser.CompanyId.GetValueOrDefault() == 0)
         {
-            // it is a regular customer accounta nd we need to capture payment
+            // it is a regular customer account, so we need to capture payment
             // stripe logic
+            var domain = "http://localhost:5210/"; // capture domain for redirect
+
+            var options = new Stripe.Checkout.SessionCreateOptions 
+            {
+                SuccessUrl = domain + $"customer/cart/OrderConfirmation/{ShoppingCartVM.OrderHeader.Id}",
+                CancelUrl = domain + "customer/cart/index",
+                LineItems = new List<Stripe.Checkout.SessionLineItemOptions>(), // holds list of items
+                Mode = "payment",
+            };
+
+            foreach (var item in ShoppingCartVM.ShoppingCartList)
+            {
+                var sessionLineItem = new SessionLineItemOptions
+                {
+                    PriceData = new SessionLineItemPriceDataOptions
+                    {
+                        UnitAmount = (long)(item.Price) * 100,
+                        Currency = "usd",
+                        ProductData = new SessionLineItemPriceDataProductDataOptions
+                        {
+                            Name = item.Product.Title
+                        }
+                    },
+                    Quantity = item.Count
+                };
+                options.LineItems.Add(sessionLineItem);
+            }
+            
+            var service = new Stripe.Checkout.SessionService(); 
+            Session session = service.Create(options);
+            _unitOfWork.OrderHeader.UpdateStripePaymentId(ShoppingCartVM.OrderHeader.Id, session.Id, session.PaymentIntentId); // paymentIntendId is null here and is only created only payment is successful
+            _unitOfWork.Save();
+            
+            Response.Headers.Add("Location", session.Url); 
+            return new StatusCodeResult(303);
         }
         
         return RedirectToAction(nameof(OrderConfirmation), new { id = ShoppingCartVM.OrderHeader.Id });
