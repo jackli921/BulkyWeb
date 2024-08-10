@@ -46,7 +46,6 @@ public class OrderHeader
     public string State { get; set; }
 
     [Required]
-    [RegularExpression(@"^\d{5}(-\d{4})?$", ErrorMessage = "Invalid postal code.")]
     [StringLength(10)]
     public string PostalCode { get; set; }
     
