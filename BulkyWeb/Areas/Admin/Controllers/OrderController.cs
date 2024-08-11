@@ -1,5 +1,6 @@
 using Bulk.DataAccess.Repository;
 using Bulky.Models;
+using Bulky.Models.ViewModel;
 using Bulky.Utility;
 using Microsoft.AspNetCore.Mvc;
 
@@ -16,6 +17,16 @@ public class OrderController : Controller
     public IActionResult Index()
     {
         return View();
+    }
+    
+    public IActionResult Details(int orderId)
+    {
+        OrderVM orderVM = new()
+        {
+            OrderHeader = _unitOfWork.OrderHeader.Get(u => u.Id == orderId, includeProperties: "ApplicationUser"),
+            OrderDetails = _unitOfWork.OrderDetail.GetAll(u => u.OrderHeaderId == orderId, includeProperties: "Product")
+        };
+        return View(orderVM);
     }
     
     #region API Endpoints
