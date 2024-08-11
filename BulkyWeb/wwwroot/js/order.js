@@ -1,8 +1,24 @@
 ﻿var datatable;
 $(document).ready(function() {
+    var url = window.location.search
+    var status = "all"; // default value
+
+    if (url.includes("inprocess")) {
+        status = "inprocess";
+    } else if (url.includes("completed")) {
+        status = "completed";
+    } else if (url.includes("pending")) {
+        status = "pending";
+    } else if (url.includes("approved")) {
+        status = "approved";
+    }
+    loadDataTable(status);
+});
+
+function loadDataTable(status){
     datatable = $('#tblData').DataTable({
         ajax: {
-            url: '/admin/order/getall',
+            url: `/admin/order/getall?status=${status}`,
         },
         columns: [
             { data: 'id' },
@@ -21,4 +37,4 @@ $(document).ready(function() {
             }
         ]
     });
-});
+}
