@@ -5,6 +5,7 @@ using Bulky.Models.ViewModel;
 using Bulky.Utility;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Stripe;
 
 namespace BulkyWeb.Areas.Admin.Controllers;
 [Area("Admin")]
@@ -89,6 +90,34 @@ public class OrderController : Controller
         return RedirectToAction(nameof(Details), new { orderId = OrderVM.OrderHeader.Id} );
     }
 
+    [HttpPost]
+    [Authorize(Roles = StaticDetails.Role_Admin + "," + StaticDetails.Role_Employee)]
+    public IActionResult CancelOrder()
+    {
+        var orderHeader = _unitOfWork.OrderHeader.Get(x => x.Id == OrderVM.OrderHeader.Id);
+
+        if (orderHeader.PaymentStatus == StaticDetails.PaymentStatusApproved)
+        {
+            var options = new RefundCreateOptions
+            {
+                Reason = RefundReasons.RequestedByCustomer,
+                PaymentIntent = orderHeader.PaymentIntentId
+            };
+
+            var service = new RefundService();
+            Refund refund = service.Create(options);
+            
+            _unitOfWork.OrderHeader.UpdateStatus(orderHeader.Id, StaticDetails.StatusCancelled, StaticDetails.StatusRefunded);
+        }
+        else
+        {
+            _unitOfWork.OrderHeader.UpdateStatus(orderHeader.Id, StaticDetails.StatusCancelled, StaticDetails.StatusCancelled);
+        }
+        _unitOfWork.Save();
+        TempData["Success"] = "Order Cancelled Successfully";
+        return RedirectToAction(nameof(Details), new { orderId = OrderVM.OrderHeader.Id} );
+    }
+    
     #region API Endpoints
     
     [HttpGet]
