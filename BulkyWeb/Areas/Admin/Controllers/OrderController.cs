@@ -1,3 +1,4 @@
+using System.Security.Claims;
 using Bulk.DataAccess.Repository;
 using Bulky.Models;
 using Bulky.Models.ViewModel;
@@ -63,8 +64,20 @@ public class OrderController : Controller
     [HttpGet]
     public IActionResult GetAll(string status)
     {
-        IEnumerable<OrderHeader> objOrderHeaders =
-            _unitOfWork.OrderHeader.GetAll(includeProperties: "ApplicationUser").ToList();
+        IEnumerable<OrderHeader> objOrderHeaders;
+
+        if (User.IsInRole(StaticDetails.Role_Admin) || User.IsInRole(StaticDetails.Role_Employee))
+        {
+           objOrderHeaders = _unitOfWork.OrderHeader.GetAll(includeProperties: "ApplicationUser").ToList();
+        }
+        else
+        {
+            var claimsIdentity = (ClaimsIdentity)User.Identity;
+            var userId = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier).Value;
+            objOrderHeaders = _unitOfWork.OrderHeader.GetAll(x => x.ApplicationUserId == userId,
+                includeProperties: "ApplicationUser");
+        }
+        
         switch (status) {
             case "pending":
                 objOrderHeaders =
