@@ -60,9 +60,7 @@ public class OrderController : Controller
         return RedirectToAction(nameof(Details), new { orderId = orderHeaderFromDb.Id} );
     }
     
-    #region API Endpoints
-
-    [HttpGet]
+    [HttpPost]
     [Authorize(Roles = StaticDetails.Role_Admin + "," + StaticDetails.Role_Employee)]
     public IActionResult StartProcessing()
     {
@@ -71,6 +69,27 @@ public class OrderController : Controller
         TempData["Success"] = "Order Details Updated Successfully";
         return RedirectToAction(nameof(Details), new { orderId = OrderVM.OrderHeader.Id} );
     }
+    [HttpPost]
+    [Authorize(Roles = StaticDetails.Role_Admin + "," + StaticDetails.Role_Employee)]
+    public IActionResult ShipOrder()
+    {
+        var orderHeader = _unitOfWork.OrderHeader.Get(x => x.Id == OrderVM.OrderHeader.Id);
+        orderHeader.TrackingNumber = OrderVM.OrderHeader.TrackingNumber;
+        orderHeader.Carrier = OrderVM.OrderHeader.Carrier;
+        orderHeader.OrderStatus = StaticDetails.StatusShipped;
+        orderHeader.ShippingDate = DateTime.Now;
+        if (orderHeader.PaymentStatus == StaticDetails.PaymentStatusDelayedPayment)
+        {
+            orderHeader.PaymentDueDate = DateOnly.FromDateTime(DateTime.Now.AddDays(30));
+        }
+        
+        _unitOfWork.OrderHeader.Update(orderHeader);
+        _unitOfWork.Save();
+        TempData["Success"] = "Order Shipped Successfully";
+        return RedirectToAction(nameof(Details), new { orderId = OrderVM.OrderHeader.Id} );
+    }
+
+    #region API Endpoints
     
     [HttpGet]
     public IActionResult GetAll(string status)
