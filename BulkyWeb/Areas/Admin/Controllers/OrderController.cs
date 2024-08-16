@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace BulkyWeb.Areas.Admin.Controllers;
 [Area("Admin")]
+[Authorize]
 public class OrderController : Controller
 {
     private IUnitOfWork _unitOfWork;
@@ -61,6 +62,16 @@ public class OrderController : Controller
     
     #region API Endpoints
 
+    [HttpGet]
+    [Authorize(Roles = StaticDetails.Role_Admin + "," + StaticDetails.Role_Employee)]
+    public IActionResult StartProcessing()
+    {
+        _unitOfWork.OrderHeader.UpdateStatus(OrderVM.OrderHeader.Id, StaticDetails.StatusInProcess);
+        _unitOfWork.Save();
+        TempData["Success"] = "Order Details Updated Successfully";
+        return RedirectToAction(nameof(Details), new { orderId = OrderVM.OrderHeader.Id} );
+    }
+    
     [HttpGet]
     public IActionResult GetAll(string status)
     {
