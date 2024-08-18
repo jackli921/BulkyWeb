@@ -1,4 +1,6 @@
-﻿@using Bulky.Utility
+﻿@using Microsoft.AspNetCore.Http
+@inject  IHttpContextAccessor HttpContextAccessor
+@using Bulky.Utility
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -29,8 +31,8 @@
                         <li class="nav-item">
                             <a class="nav-link" asp-area="Admin" asp-controller="Order" asp-action="Index">Orders</a>
                         </li>
-                        @* @if (User.IsInRole(StaticDetails.Role_Admin)) *@
-                        @* { *@
+                        @if (User.IsInRole(StaticDetails.Role_Admin))
+                        {
                             <li class="nav-item dropdown">
                                 <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                                     Content Management
@@ -48,10 +50,14 @@
                                     <li><hr class="dropdown-divider"></li>
                                 </ul>
                             </li>
-                        @* } *@
+                        }
                         <li class="nav-item">
                             <a class="nav-link" asp-area="Customer" asp-controller="Cart" asp-action="Index">
-                                <i class="bi bi-cart"></i> &nbsp
+                                <p class="bi bi-cart">
+                                    @(HttpContextAccessor.HttpContext.Session.GetInt32(StaticDetails.SessionCart) == null 
+                                            ? 0
+                                            : HttpContextAccessor.HttpContext.Session.GetInt32(StaticDetails.SessionCart))
+                                </p> &nbsp
                             </a>
                         </li>
                     </ul>

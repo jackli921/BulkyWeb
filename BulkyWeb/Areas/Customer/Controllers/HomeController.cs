@@ -4,6 +4,7 @@ using BulkyWeb.Models;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
 using System.Security.Claims;
+using Bulky.Utility;
 using Microsoft.AspNetCore.Authorization;
 
 
@@ -54,15 +55,17 @@ public class HomeController : Controller
             // shopping cart already exists
             cartFromDb.Count += shoppingCart.Count;
             _unitOfWork.ShoppingCart.Update(cartFromDb);
+            _unitOfWork.Save();
+
         }
         else
         {
              shoppingCart.Id = 0; // This ensures EF Core handles the identity column
             _unitOfWork.ShoppingCart.Add(shoppingCart);
+            _unitOfWork.Save();
+            HttpContext.Session.SetInt32(StaticDetails.SessionCart, _unitOfWork.ShoppingCart.GetAll(x => x.ApplicationUserId == userId).Count());
         }
-
         TempData["success"] = "Cart updated successfully";
-        _unitOfWork.Save();
 
         return RedirectToAction(nameof(Index));
     }
