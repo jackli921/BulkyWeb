@@ -180,6 +180,7 @@ public class CartController : Controller
                 _unitOfWork.OrderHeader.UpdateStatus(id, StaticDetails.StatusApproved, StaticDetails.PaymentStatusApproved);
                 _unitOfWork.Save();
             }
+            HttpContext.Session.Clear();
         }
 
         List<ShoppingCart> shoppingCarts = _unitOfWork.ShoppingCart
