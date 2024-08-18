@@ -199,10 +199,11 @@ public class CartController : Controller
     
     public IActionResult Minus(int cartId)
     {
-        var cartFromDb = _unitOfWork.ShoppingCart.Get(x => x.Id == cartId);
+        var cartFromDb = _unitOfWork.ShoppingCart.Get(x => x.Id == cartId, tracked:true);
         if (cartFromDb.Count <= 1)
         {
             // remove from cart
+            HttpContext.Session.SetInt32(StaticDetails.SessionCart, _unitOfWork.ShoppingCart.GetAll(x => x.ApplicationUserId == cartFromDb.ApplicationUserId).Count() );
             _unitOfWork.ShoppingCart.Remove(cartFromDb);
         }
         else
@@ -216,7 +217,8 @@ public class CartController : Controller
     
     public IActionResult Remove(int cartId)
     {
-        var cartFromDb = _unitOfWork.ShoppingCart.Get(x => x.Id == cartId);
+        var cartFromDb = _unitOfWork.ShoppingCart.Get(x => x.Id == cartId, tracked:true);
+        HttpContext.Session.SetInt32(StaticDetails.SessionCart, _unitOfWork.ShoppingCart.GetAll(x => x.ApplicationUserId == cartFromDb.ApplicationUserId).Count() );
         _unitOfWork.ShoppingCart.Remove(cartFromDb);
         _unitOfWork.Save();
         return RedirectToAction(nameof(Index));
