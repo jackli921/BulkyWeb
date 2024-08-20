@@ -128,7 +128,7 @@ public class OrderController : Controller
         OrderVM.OrderDetails = _unitOfWork.OrderDetail.GetAll(u => u.OrderHeaderId == OrderVM.OrderHeader.Id,
             includeProperties: "Product");
         // stripe logic
-        var domain = "http://localhost:5210/"; // capture domain for redirect
+        var domain = $"{Request.Scheme}://{Request.Host.Value}/"; // capture domain for redirect
         var options = new Stripe.Checkout.SessionCreateOptions 
         {
             SuccessUrl = domain + $"admin/order/PaymentConfirmation?orderHeaderId={OrderVM.OrderHeader.Id}",
