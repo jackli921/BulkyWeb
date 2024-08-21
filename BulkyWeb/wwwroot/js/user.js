@@ -9,7 +9,7 @@ $(document).ready(function() {
             { data: 'email' },
             { data: 'phoneNumber' },
             { data: 'company.name' },
-            { data: '' },
+            { data: 'role' },
             {
                 data: 'id',
                 render: function(data) {
