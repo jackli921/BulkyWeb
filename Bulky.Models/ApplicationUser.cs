@@ -16,5 +16,5 @@ public class ApplicationUser: IdentityUser
     public int? CompanyId { get; set; }
     [ForeignKey("CompanyId")]
     [ValidateNever]
-    public Company Company { get; set; }
+    public Company? Company { get; set; }
 }
